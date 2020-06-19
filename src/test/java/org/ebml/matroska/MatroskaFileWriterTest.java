@@ -103,6 +103,15 @@ public class MatroskaFileWriterTest
   }
 
   @Test
+  public void testReadFile() throws Exception {
+    final MatroskaFile reader = new MatroskaFile(new FileDataSource("/workplace/Acuity/testdata/input/vogels_ffmpeg.mkv"));
+    reader.readFile();
+    MatroskaFileTrack[] tracks = reader.getTrackList();
+    System.out.println("tracks : " + tracks.length);
+  }
+
+
+  @Test
   public void testSilentTrack() throws FileNotFoundException, IOException
   {
     final MatroskaFileWriter writer = new MatroskaFileWriter(ioDW);

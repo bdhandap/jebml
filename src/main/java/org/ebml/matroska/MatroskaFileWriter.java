@@ -60,7 +60,7 @@ public class MatroskaFileWriter
     tracks = new MatroskaFileTracks(ioDW.getFilePointer());
     tracks.writeTracks(ioDW);
     cluster = new MatroskaCluster();
-    cluster.setLimitParameters(5000, 128 * 1024);
+    cluster.setLimitParameters(10000, 1024 * 1024 * 1024);
     metaSeek.addIndexedElement(MatroskaDocTypes.Cluster.getType(), ioDW.getFilePointer());
   }
 

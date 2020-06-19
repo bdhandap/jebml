@@ -447,14 +447,16 @@ public class MatroskaFileTrack
     trackEntryElem.addChildElement(trackUIDElem);
     trackEntryElem.addChildElement(trackTypeElem);
 
-    trackEntryElem.addChildElement(trackFlagEnabledElem);
-    trackEntryElem.addChildElement(trackFlagDefaultElem);
-    trackEntryElem.addChildElement(trackFlagForcedElem);
+//    trackEntryElem.addChildElement(trackFlagEnabledElem);
+//    trackEntryElem.addChildElement(trackFlagDefaultElem);
+//    trackEntryElem.addChildElement(trackFlagForcedElem);
     trackEntryElem.addChildElement(trackFlagLacingElem);
-    trackEntryElem.addChildElement(trackMinCacheElem);
-    trackEntryElem.addChildElement(trackMaxBlockAddIdElem);
+//    trackEntryElem.addChildElement(trackMinCacheElem);
+//    trackEntryElem.addChildElement(trackMaxBlockAddIdElem);
 
-    trackEntryElem.addChildElement(trackNameElem);
+    if (!this.getName().equals("unnamed")) {
+      trackEntryElem.addChildElement(trackNameElem);
+    }
     trackEntryElem.addChildElement(trackLangElem);
     trackEntryElem.addChildElement(trackCodecIDElem);
 
@@ -466,17 +468,19 @@ public class MatroskaFileTrack
 
     }
 
-    final UnsignedIntegerElement trackDefaultDurationElem = MatroskaDocTypes.DefaultDuration.getInstance();
-    trackDefaultDurationElem.setValue(this.getDefaultDuration());
+    if (this.getDefaultDuration() != 0) {
+      final UnsignedIntegerElement trackDefaultDurationElem = MatroskaDocTypes.DefaultDuration.getInstance();
+      trackDefaultDurationElem.setValue(this.getDefaultDuration());
+      trackEntryElem.addChildElement(trackDefaultDurationElem);
+    }
 
-    final UnsignedIntegerElement trackCodecDecodeAllElem = MatroskaDocTypes.CodecDecodeAll.getInstance();
-    trackCodecDecodeAllElem.setValue(this.codecDecodeAll ? 1 : 0);
+//    final UnsignedIntegerElement trackCodecDecodeAllElem = MatroskaDocTypes.CodecDecodeAll.getInstance();
+//    trackCodecDecodeAllElem.setValue(this.codecDecodeAll ? 1 : 0);
 
     // final UnsignedIntegerElement trackSeekPrerollElem = (UnsignedIntegerElement) doc.createElement(MatroskaDocTypes.TrackSeekPreroll);
     // trackSeekPrerollElem.setValue(this.seekPreroll);
 
-    trackEntryElem.addChildElement(trackDefaultDurationElem);
-    trackEntryElem.addChildElement(trackCodecDecodeAllElem);
+//    trackEntryElem.addChildElement(trackCodecDecodeAllElem);
     // trackEntryElem.addChildElement(trackSeekPrerollElem);
 
     if (!overlayUids.isEmpty())
@@ -506,10 +510,14 @@ public class MatroskaFileTrack
       final UnsignedIntegerElement trackVideoDisplayHeightElem = MatroskaDocTypes.DisplayHeight.getInstance();
       trackVideoDisplayHeightElem.setValue(this.video.getDisplayHeight());
 
+      final UnsignedIntegerElement trackVideoFlagInterlaced = MatroskaDocTypes.FlagInterlaced.getInstance();
+      trackVideoFlagInterlaced.setValue(2);
+
       trackVideoElem.addChildElement(trackVideoPixelWidthElem);
       trackVideoElem.addChildElement(trackVideoPixelHeightElem);
       trackVideoElem.addChildElement(trackVideoDisplayWidthElem);
       trackVideoElem.addChildElement(trackVideoDisplayHeightElem);
+      trackVideoElem.addChildElement(trackVideoFlagInterlaced);
 
       trackEntryElem.addChildElement(trackVideoElem);
     }

@@ -1,5 +1,6 @@
 package org.ebml.matroska;
 
+import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -92,25 +93,25 @@ class MatroskaSimpleBlock
 
     buf.putShort(timecode);
     final BitSet bs = new BitSet(8);
-    bs.set(0, keyFrame);
-    bs.set(4, invisible);
+    bs.set(7, keyFrame);
+    bs.set(5, invisible);
     ByteBuffer sizes = null;
     laceMode = pickBestLaceMode();
     // TODO: correctly calculate resultant buffer size for different lace modes
     switch (laceMode)
     {
       case EBML:
-        bs.set(5);
-        bs.set(6);
+        bs.set(1);
+        bs.set(2);
         sizes = ebmlEncodeLaceSizes();
         break;
       case XIPH:
-        bs.set(6);
+        bs.set(1);
         sizes = xiphEncodeLaceSizes();
         break;
       case FIXED:
         sizes = fixedEncodeLaceSizes();
-        bs.set(5);
+        bs.set(2);
         break;
       case NONE:
         LOG.trace("Lace mode none!");
@@ -118,8 +119,9 @@ class MatroskaSimpleBlock
       default:
         break;
     }
-    bs.set(7, discardable);
-    buf.put(bs.toByteArray());
+    bs.set(0, discardable);
+    byte[] simpleBlockFlags = (bs.isEmpty()) ? new byte[] {0} : bs.toByteArray();
+    buf.put(simpleBlockFlags);
     if (sizes != null)
     {
       buf.put(sizes);
@@ -225,6 +227,8 @@ class MatroskaSimpleBlock
     LOG.trace("Adding frame {}", frame.getData().remaining());
     setTimecode(frame.getTimecode());
     setTrackNumber(frame.getTrackNo());
+    setKeyFrame(frame.isKeyFrame());
+    setDiscardable(frame.isDiscardable());
     totalSize += frame.getData().remaining();
     frames.add(frame);
     if (frame.getDuration() != Long.MIN_VALUE)

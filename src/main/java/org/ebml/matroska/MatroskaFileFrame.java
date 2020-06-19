@@ -53,6 +53,8 @@ public class MatroskaFileFrame
   private ByteBuffer data;
   private boolean keyFrame;
 
+  private boolean discardable;
+
   /**
    * MatroskaFrame Default constructor
    */
@@ -98,6 +100,20 @@ public class MatroskaFileFrame
   public void setKeyFrame(final boolean keyFrame)
   {
     this.keyFrame = keyFrame;
+  }
+
+  /**
+   * @return true if this frame is discardable
+   */
+  public boolean isDiscardable() {
+    return discardable;
+  }
+
+  /**
+   * @param discardable true if this frame is discardable
+   */
+  public void setDiscardable(boolean discardable) {
+    this.discardable = discardable;
   }
 
   /**
